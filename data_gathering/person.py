@@ -7,7 +7,7 @@ class Person:
         self.extract_data()
 
     def extract_data(self):
-        person_file = open("/Users/Drifter/dima/gchat_analysis/data_gathering/text_data_files/" + self.name + ".txt")
+        person_file = open("data_gathering/text_data_files/" + self.name + ".txt")
         chat_lines = person_file.readlines()
         self.messages = []
         for line in chat_lines:
@@ -21,15 +21,22 @@ class Person:
 
         self.messages.sort(key=lambda message: message.datetime)
 
-    def message_volume(self, date):
+    def message_volume(self, date, word_filter=[], incoming=True, outgoing=True):
         index = 0
         current_date = self.messages[index].datetime.date()
         word_count = 0
-        while current_date < date:
+        while current_date < date and index < (len(self.messages)-1):
             index += 1
             current_date = self.messages[index].datetime.date()
-        while current_date == date:
-            word_count += self.messages[index].number_of_words
+        while current_date == date and index < (len(self.messages)-1):
+            if not word_filter:
+                if (incoming and self.messages[index].incoming) or (outgoing and not (self.messages[index].incoming)):
+                    word_count += self.messages[index].number_of_words
+            if word_filter and any([word.lower() in self.messages[index].message_string.lower
+()
+                    for word in word_filter]):
+                if (incoming and self.messages[index].incoming) or (outgoing and not (self.messages[index].incoming)):
+                    word_count += 1
             index += 1
             current_date = self.messages[index].datetime.date()
 

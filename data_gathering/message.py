@@ -18,7 +18,7 @@ class Message:
 
     def from_string(self, first_string, second_string):
         if ">" not in first_string:
-            final_string = first_string + second_string
+            final_string = first_string + " " + second_string
             number_to_remove = 4
         else:
             final_string = first_string
